@@ -243,7 +243,7 @@ ensure_portage_itself_is_up_to_date() {
 
 ensure_ltoize_itself_is_up_to_date() {
     if [ -f /etc/portage/package.cflags/lto.conf ]; then
-        show "Bringing  itself up to date..."
+        show "Bringing ltoize itself up to date..."
         # don't fail on this, as an @world update may solve any blocks
         ${EMERGE} ${VERBOSITYFLAG} --oneshot --update sys-config/ltoize || \
             warning "Could not update lotize: proceeding anyway"
