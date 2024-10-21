@@ -241,6 +241,15 @@ ensure_portage_itself_is_up_to_date() {
         warning "Could not update Portage: proceeding anyway"
 }
 
+ensure_ltoize_itself_is_up_to_date() {
+    if [ -f /etc/portage/package.cflags/lto.conf ]; then
+        show "Bringing  itself up to date..."
+        # don't fail on this, as an @world update may solve any blocks
+        ${EMERGE} ${VERBOSITYFLAG} --oneshot --update sys-config/ltoize || \
+            warning "Could not update lotize: proceeding anyway"
+    fi
+}
+
 ensure_genup_itself_is_up_to_date() {
     show "Bringing genup itself up to date..."
     ${EMERGE} ${VERBOSITYFLAG} --oneshot --update app-portage/genup
@@ -426,7 +435,7 @@ run_fixups_if_present() {
             warning "'/var/log/latest-fixup-run.log' for further details."
         fi
     fi
-}   
+}
 check_if_dispatch_conf_needs_to_be_run() {
     # check if the user has any configuration file changes pending review
     # by dispatch-conf, and set the NEEDSDISPATCHCONF variable accordingly
@@ -544,7 +553,7 @@ rebuild_where_missing_libraries_detected() {
     # emerge --depclean) and attempt to fix them, by re-emerging the broken
     # libraries and binaries (shouldn't do much nowadays, but good to check!)
     show "Fixing any broken/missing libraries and binaries caused by cleanup..."
-    revdep-rebuild 
+    revdep-rebuild
 }
 display_final_status() {
     show
@@ -818,6 +827,7 @@ update_portage_tree_and_sync_eix
 remove_any_prior_emerge_resume_history
 run_fixups_if_present
 ensure_portage_itself_is_up_to_date
+ensure_ltoize_itself_is_up_to_date
 ensure_genup_itself_is_up_to_date
 try_emtee_update_if_enabled
 update_all_packages_in_world_set_and_dependencies
